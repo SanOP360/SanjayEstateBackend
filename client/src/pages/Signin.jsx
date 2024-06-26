@@ -1,16 +1,23 @@
-import React,{useState} from 'react'
+import React, { useState } from "react";
 import axios from "axios";
-import { Link ,useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  signInStart,
+  signInSuccess,
+  signInFailure,
+} from "../redux/User/userSlice";
 
 export default function Signin() {
-    const [formData, setFormData] = useState({
-    username: "",
+  const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const Navigate=useNavigate();
+
+  const { loading, error } = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -20,23 +27,25 @@ export default function Signin() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
+    dispatch(signInStart());
     try {
       const res = await axios.post("/api/auth/signin", formData);
       if (res.data.success === false) {
-        setError(res.data.message);
-        setLoading(false);
+        dispatch(signInFailure(res.data.message));
         return;
       }
-      setLoading(false);
-      console.log(res.data);
-      Navigate('/')
+      dispatch(signInSuccess(res.data));
+      navigate("/");
     } catch (error) {
-      setError(
-        error.response?.data?.message || "An error occurred during signin."
-      );
-      setLoading(false);
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        dispatch(signInFailure(error.response.data.message));
+      } else {
+        dispatch(signInFailure(error.message));
+      }
     }
   };
 
@@ -46,7 +55,6 @@ export default function Signin() {
         Sign In
       </h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-        
         <input
           type="email"
           placeholder="email"
@@ -74,9 +82,9 @@ export default function Signin() {
       <div className="mt-5 text-center flex gap-2">
         <p>Dont have an account?</p>
         <Link to="/sign-up" className="text-blue-500">
-          Sign In
+          Sign Up
         </Link>
       </div>
     </div>
-  )
+  );
 }
