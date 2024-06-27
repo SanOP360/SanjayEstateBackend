@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Link ,useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import OAuth from "../components/OAuth";
 
 export default function Signup() {
   const [formData, setFormData] = useState({
@@ -10,7 +11,8 @@ export default function Signup() {
   });
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const Navigate=useNavigate();
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -24,14 +26,14 @@ export default function Signup() {
     setError(null);
     try {
       const res = await axios.post("/api/auth/signup", formData);
-      if (res.data.success === false) {
+      if (!res.data.success) {
         setError(res.data.message);
         setLoading(false);
         return;
       }
       setLoading(false);
       console.log(res.data);
-      Navigate('/sign-in')
+      navigate("/sign-in");
     } catch (error) {
       setError(
         error.response?.data?.message || "An error occurred during signup."
@@ -48,7 +50,7 @@ export default function Signup() {
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         <input
           type="text"
-          placeholder="username"
+          placeholder="Username"
           className="border p-3 rounded-lg"
           id="username"
           value={formData.username}
@@ -56,7 +58,7 @@ export default function Signup() {
         />
         <input
           type="email"
-          placeholder="email"
+          placeholder="Email"
           className="border p-3 rounded-lg"
           id="email"
           value={formData.email}
@@ -64,7 +66,7 @@ export default function Signup() {
         />
         <input
           type="password"
-          placeholder="password"
+          placeholder="Password"
           className="border p-3 rounded-lg"
           id="password"
           value={formData.password}
@@ -76,6 +78,7 @@ export default function Signup() {
         >
           {loading ? "Loading..." : "Sign Up"}
         </button>
+        <OAuth />
       </form>
       {error && <p className="text-red-500 mt-2">{error}</p>}
       <div className="mt-5 text-center flex gap-2">
