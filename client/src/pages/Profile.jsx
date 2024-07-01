@@ -12,8 +12,15 @@ import {
   updateUserStart,
   updateUserFailure,
   updateUserSuccess,
+  deleteUserFailure,
+  deleteUserSuccess,
+  deleteUserStart,
+  signoutUserFailure,
+  signoutUserSuccess,
+  signoutUserStart,
 } from "../redux/User/userSlice";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export default function Profile() {
   const dispatch = useDispatch();
@@ -28,7 +35,7 @@ export default function Profile() {
     email: currentUser.email || "",
     password: "",
   });
-
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (file) {
@@ -60,12 +67,52 @@ export default function Profile() {
     );
   };
 
-  // Function to handle form field changes
+  const deleteUserHandler = async () => {
+    try {
+      dispatch(deleteUserStart());
+      const res = await axios.post(
+        `http://localhost:3000/user/delete/${currentUser._id}`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (res.data.success === false) {
+        dispatch(deleteUserFailure(res.data.message));
+        return;
+      }
+
+      dispatch(deleteUserSuccess(res.data));
+      navigate("/sign-in");
+    } catch (err) {
+      dispatch(deleteUserFailure(err.response?.data?.message || err.message));
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      dispatch(signoutUserStart());
+      const res = await axios.get(`http://localhost:3000/api/auth/signout`, {
+        withCredentials: true,
+      });
+
+      if (res.data.success === false) {
+        dispatch(signoutUserFailure(res.data.message));
+        return;
+      }
+
+      dispatch(signoutUserSuccess(res.data));
+      navigate("/sign-in");
+    } catch (err) {
+      dispatch(signoutUserFailure(err.response?.data?.message || err.message));
+    }
+  };
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
-  // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -82,7 +129,7 @@ export default function Profile() {
       setUpdateSuccess(true);
       setTimeout(() => {
         setUpdateSuccess(false);
-      }, 5000); 
+      }, 5000);
     } catch (error) {
       dispatch(
         updateUserFailure(error.response?.data?.message || error.message)
@@ -110,7 +157,7 @@ export default function Profile() {
         <p className="text-sm self-center">
           {fileUploadError ? (
             <span className="text-red-700">
-              Error Image upload (image must be less than 2 mb)
+              Error uploading image (image must be less than 2 MB)
             </span>
           ) : filePerc > 0 && filePerc < 100 ? (
             <span className="text-slate-700">{`Uploading ${filePerc}%`}</span>
@@ -154,12 +201,19 @@ export default function Profile() {
         </button>
       </form>
       <div className="flex justify-between mt-5">
-        <span className="text-red-700 cursor-pointer">Delete account</span>
-        <span className="text-red-700 cursor-pointer">Sign out</span>
+        <span
+          className="text-red-700 cursor-pointer"
+          onClick={deleteUserHandler}
+        >
+          Delete account
+        </span>
+        <span className="text-red-700 cursor-pointer" onClick={handleLogout}>
+          Sign out
+        </span>
       </div>
       <p className="text-red-700 mt-5">{error ? error : ""}</p>
       <p className="text-green-700">
-        {updateSuccess ? "User is updated successfully!" : ""}
+        {updateSuccess ? "User updated successfully!" : ""}
       </p>
     </div>
   );
