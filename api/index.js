@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const userRouter = require("./routes/user.route");
 const authRouter = require("./routes/auth.route");
+const listingRouter=require("./routes/listing.route")
 const cookieParser = require("cookie-parser");
 
 dotenv.config();
@@ -31,6 +32,7 @@ mongoose
 
 app.use("/user", userRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/listing",listingRouter)
 
 
 app.use((err, req, res, next) => {
