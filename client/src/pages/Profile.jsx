@@ -31,6 +31,9 @@ export default function Profile() {
   const [filePerc, setFilePerc] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [updateSuccess, setUpdateSuccess] = useState(false);
+  const [showListingError, setShowListingError] = useState(false);
+  const [userListings, setUserListings] = useState([]);
+  const [showListings, setShowListings] = useState(false);
   const [formData, setFormData] = useState({
     username: currentUser.username || "",
     email: currentUser.email || "",
@@ -88,6 +91,29 @@ export default function Profile() {
       navigate("/sign-in");
     } catch (err) {
       dispatch(deleteUserFailure(err.response?.data?.message || err.message));
+    }
+  };
+
+  const handleListing = async () => {
+    if (showListings) {
+      setShowListings(false);
+      return;
+    }
+
+    try {
+      setShowListingError(false);
+      const res = await axios.get(
+        `http://localhost:3000/user/listing/${currentUser._id}`,
+        { withCredentials: true }
+      );
+      if (res.data.success === false) {
+        setShowListingError(true);
+        return;
+      }
+      setUserListings(res.data);
+      setShowListings(true);
+    } catch {
+      setShowListingError(true);
     }
   };
 
@@ -200,7 +226,12 @@ export default function Profile() {
         >
           {loading ? "Loading..." : "Update"}
         </button>
-        <Link to='/create-listing' className='bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95'>Create Listing</Link>
+        <Link
+          to="/create-listing"
+          className="bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95"
+        >
+          Create Listing
+        </Link>
       </form>
       <div className="flex justify-between mt-5">
         <span
@@ -217,6 +248,44 @@ export default function Profile() {
       <p className="text-green-700">
         {updateSuccess ? "User updated successfully!" : ""}
       </p>
+      <button
+        onClick={handleListing}
+        className="text-green-700 w-full border-4 border-green-700 hover:bg-slate-200 rounded-full uppercase p-3 text-2xl"
+      >
+        {showListings ? "Hide Listing" : "Show Listing"}
+      </button>
+      <p className="text-red-700 mt-5">
+        {showListingError ? "Error showing listing" : ""}
+      </p>
+
+      {showListings && userListings && userListings.length > 0 && (
+        <div className="flex flex-col gap-4 mt-7">
+          <h1 className="text-center text-2xl font-semibold">Your Listings</h1>
+          {userListings.map((listing) => (
+            <div
+              key={listing._id}
+              className="border rounded-lg flex p-3 justify-between items-center"
+            >
+              <Link to={`/listing/${listing._id}`}>
+                <img
+                  src={listing.imageUrls[0]}
+                  alt={listing.name}
+                  className="h-16 w-16 object-contain"
+                />
+              </Link>
+              <Link className="flex-1 mx-2" to={`/listing/${listing._id}`}>
+                <p className="text-slate-700 font-semibold flex-1 hover:underline truncate">
+                  {listing.name}
+                </p>
+              </Link>
+              <div className="flex flex-col items-center">
+                <button className="text-red-700">Delete</button>
+                <button className="text-green-700">Edit</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
