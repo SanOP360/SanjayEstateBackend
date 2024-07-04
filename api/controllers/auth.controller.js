@@ -69,10 +69,13 @@ const google = async (req, res, next) => {
 
       await newUser.save();
 
-      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
+      const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET, {
+        expiresIn: "7d", 
+      });
+
       const { password: pass, ...rest } = newUser._doc;
       res
-        .cookie("access_token", token, { httpOnly: true })
+        .cookie("access_token", token, { httpOnly: true,maxAge:7*24*60*1000 })
         .status(200)
         .json(rest);
     }

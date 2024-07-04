@@ -164,6 +164,22 @@ export default function Profile() {
     }
   };
 
+  const handleListingDelete = async (listingId) => {
+    try {
+      const res = await axios.post(`/api/listing/delete/${listingId}`);
+
+      if (res.data.success === false) {
+        console.log(res.data.message);
+        return;
+      }
+      setUserListings((prev) =>
+        prev.filter((listing) => listing._id !== listingId)
+      );
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
@@ -252,14 +268,14 @@ export default function Profile() {
         onClick={handleListing}
         className="text-green-700 w-full border-4 border-green-700 hover:bg-slate-200 rounded-full uppercase p-3 text-2xl"
       >
-        {showListings ? "Hide Listing" : "Show Listing"}
+        {showListings ? "Hide Listings" : "Show Listings"}
       </button>
       <p className="text-red-700 mt-5">
-        {showListingError ? "Error showing listing" : ""}
+        {showListingError ? "Error showing listings" : ""}
       </p>
 
       {showListings && userListings && userListings.length > 0 && (
-        <div className="flex flex-col gap-4 mt-7">
+        <div className="flex flex-col gap-4 mt-7 transition-all duration-500">
           <h1 className="text-center text-2xl font-semibold">Your Listings</h1>
           {userListings.map((listing) => (
             <div
@@ -279,8 +295,19 @@ export default function Profile() {
                 </p>
               </Link>
               <div className="flex flex-col items-center">
-                <button className="text-red-700">Delete</button>
-                <button className="text-green-700">Edit</button>
+                <button
+                  onClick={() => {
+                    handleListingDelete(listing._id);
+                  }}
+                  className="text-red-700  hover:text-red-900"
+                >
+                  Delete
+                </button>
+                <Link to={`/update-listing/${listing._id}`}>
+                  <button className="text-green-700  hover:text-green-900">
+                    Edit
+                  </button>
+                </Link>
               </div>
             </div>
           ))}
@@ -289,3 +316,4 @@ export default function Profile() {
     </div>
   );
 }
+ 
