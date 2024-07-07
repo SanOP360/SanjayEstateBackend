@@ -136,9 +136,10 @@ function CreateListing() {
       if(res.data.success===false){
         setError(res.data.message)
       }
-      Navigate(`/listing/${data._id}`)
+      Navigate(`/listing/${res.data._id}`)
     } catch (error) {
       setError(error.message);
+      console.log(error);
       setLoading(false);
     }
   };
@@ -252,7 +253,7 @@ function CreateListing() {
             <div className="flex items-center gap-2">
               <input
                 type="number"
-                id="bedrooms"
+                id="bathrooms"
                 min="1"
                 max="10"
                 required
