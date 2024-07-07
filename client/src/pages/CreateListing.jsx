@@ -100,23 +100,26 @@ function CreateListing() {
   };
 
   const handleChange = (e) => {
-    if(e.target.id==='sale' || e.target.id==='rent'){
-      setFormData({
-        ...formData,type:e.target.id
-      })
-    }
-    if(e.target.id==='parking' || e.target.id==='furnished' || e.target.id==='offer'){
-      setFormData({
-        ...formData,[e.target.id]:e.target.checked
-      })
-    }
+    const { id, value, checked, type } = e.target;
 
-    if(e.target.type==='number' || e.target.type==='text' || e.target.type==='textarea'){
+    if (id === "sale" || id === "rent") {
       setFormData({
-        ...formData,[e.target.id]:e.target.value
-      })
+        ...formData,
+        type: id,
+      });
+    } else if (id === "parking" || id === "furnished" || id === "offer") {
+      setFormData({
+        ...formData,
+        [id]: checked,
+      });
+    } else if (type === "number" || type === "text" || type === "textarea") {
+      setFormData({
+        ...formData,
+        [id]: value,
+      });
     }
   };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -249,7 +252,7 @@ function CreateListing() {
             <div className="flex items-center gap-2">
               <input
                 type="number"
-                id="bathrooms"
+                id="bedrooms"
                 min="1"
                 max="10"
                 required
@@ -264,7 +267,7 @@ function CreateListing() {
                 type="number"
                 id="regularPrice"
                 min="100"
-                max="100000"
+                max="1000000"
                 required
                 className="p-3 border border-gray-300 rounded-lg"
                 onChange={handleChange}
@@ -281,7 +284,7 @@ function CreateListing() {
                   type="number"
                   id="discountedPrice"
                   min="1"
-                  max="100000"
+                  max="1000000"
                   required
                   className="p-3 border border-gray-300 rounded-lg"
                   onChange={handleChange}
