@@ -11,11 +11,10 @@ export default defineConfig({
         secure: false,
       },
     },
+
+    host: true,
+    strictPort: true,
+    port: 5173,
   },
-  plugins: [react()],
-  server:{
-    host:true,
-    strictPort:true,
-    port:5173
-  }
+  plugins: [react()]
 });
