@@ -16,6 +16,7 @@ function Search() {
 
   const [loading, setLoading] = useState(false);
   const [listings, setListings] = useState([]);
+  const [showMore, setShowMore] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -63,12 +64,16 @@ function Search() {
     }
 
     const fetchListings = async () => {
+      setShowMore(false);
       setLoading(true);
       try {
         const res = await axios.get(
           `http://localhost:3000/api/listing/get?${urlParams.toString()}`
         );
         setListings(res.data);
+        if (res.data.length > 8) {
+          setShowMore(true);
+        }
       } catch (error) {
         console.error("Error fetching listings:", error);
       } finally {
@@ -92,6 +97,22 @@ function Search() {
     urlParams.set("order", sidebardata.order);
 
     navigate(`/search?${urlParams.toString()}`);
+  };
+
+  const onShowMoreClick = async () => {
+    const numberOfListings=listings.length;
+    const startIndex=numberOfListings;
+    const  urlParams= new URLSearchParams(location.search);
+    urlParams.set('startIndex',startIndex);
+    const searchQuery=urlParams.toString();
+    const res = await axios.get(
+      `http://localhost:3000/api/listing/get?${searchQuery}`
+    );
+    const data=res.data;
+    if(data.length<9){
+      setShowMore(false);
+    }
+    setListings([...listings,...data])
   };
 
   return (
@@ -181,7 +202,7 @@ function Search() {
             <label className="font-semibold">Sort:</label>
             <select
               onChange={handleChange}
-              defaultValue={"created_at_desc"}
+              value={`${sidebardata.sort}_${sidebardata.order}`}
               id="sort_order"
               className="border rounded-lg p-3"
             >
@@ -210,6 +231,14 @@ function Search() {
             listings.map((listing) => (
               <ListingItem key={listing._id} listing={listing} />
             ))}
+          {!loading && showMore && (
+            <button
+              className="text-green-700 hover:underline mt-4 mx-auto text-2xl font-medium w-full"
+              onClick={onShowMoreClick}
+            >
+              Show More
+            </button>
+          )}
         </div>
       </div>
     </div>
