@@ -36,7 +36,7 @@ app.use("/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/listing",listingRouter)
 
-
+console.log(__dirname)
 
 app.use(express.static(path.join(__dirname, "../client")));
 
@@ -56,5 +56,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(3000, () => {
-  console.log("Server is running on port 8800");
+  console.log("Server is running on port 3000");
 });
