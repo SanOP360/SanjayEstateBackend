@@ -4,14 +4,13 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const userRouter = require("./routes/user.route");
 const authRouter = require("./routes/auth.route");
-const listingRouter=require("./routes/listing.route")
+const listingRouter = require("./routes/listing.route");
 const cookieParser = require("cookie-parser");
 const path = require("path");
 
 dotenv.config();
 
 const app = express();
-
 
 app.use(
   cors({
@@ -34,15 +33,14 @@ mongoose
 
 app.use("/user", userRouter);
 app.use("/api/auth", authRouter);
-app.use("/api/listing",listingRouter)
+app.use("/api/listing", listingRouter);
 
-console.log(__dirname)
+console.log(__dirname);
 
-app.use(express.static(path.join(__dirname, "../client")));
-
+app.use(express.static(path.join(__dirname, "../client/dist")));
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../client", "index.html"));
+  res.sendFile(path.join(__dirname, "../client/dist", "index.html"));
 });
 
 app.use((err, req, res, next) => {
