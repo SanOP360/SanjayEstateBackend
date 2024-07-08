@@ -68,7 +68,7 @@ function Search() {
       setLoading(true);
       try {
         const res = await axios.get(
-          `http://localhost:3000/api/listing/get?${urlParams.toString()}`
+          `http://localhost:10000/api/listing/get?${urlParams.toString()}`
         );
         setListings(res.data);
         if (res.data.length > 8) {
@@ -106,7 +106,7 @@ function Search() {
     urlParams.set('startIndex',startIndex);
     const searchQuery=urlParams.toString();
     const res = await axios.get(
-      `http://localhost:3000/api/listing/get?${searchQuery}`
+      `http://localhost:10000/api/listing/get?${searchQuery}`
     );
     const data=res.data;
     if(data.length<9){

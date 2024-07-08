@@ -75,7 +75,7 @@ export default function Profile() {
     try {
       dispatch(deleteUserStart());
       const res = await axios.post(
-        `http://localhost:3000/user/delete/${currentUser._id}`,
+        `http://localhost:10000/user/delete/${currentUser._id}`,
         {},
         {
           withCredentials: true,
@@ -103,7 +103,7 @@ export default function Profile() {
     try {
       setShowListingError(false);
       const res = await axios.get(
-        `http://localhost:3000/user/listing/${currentUser._id}`,
+        `http://localhost:10000/user/listing/${currentUser._id}`,
         { withCredentials: true }
       );
       if (res.data.success === false) {
@@ -120,7 +120,7 @@ export default function Profile() {
   const handleLogout = async () => {
     try {
       dispatch(signoutUserStart());
-      const res = await axios.get(`http://localhost:3000/api/auth/signout`, {
+      const res = await axios.get(`http://localhost:10000/api/auth/signout`, {
         withCredentials: true,
       });
 
@@ -145,7 +145,7 @@ export default function Profile() {
     try {
       dispatch(updateUserStart());
       const res = await axios.post(
-        `http://localhost:3000/user/update/${currentUser._id}`,
+        `http://localhost:10000/user/update/${currentUser._id}`,
         formData,
         {
           withCredentials: true,
