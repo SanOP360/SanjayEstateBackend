@@ -43,7 +43,7 @@ export default function Signup() {
   };
 
   return (
-    <div className="p-3 max-w-lg mx-auto">
+    <div className="p-3 max-w-lg mx-auto min-h-screen">
       <h1 className="text-3xl text-center font-semibold my-7 p-3 max-w-lg mx-auto">
         Sign Up
       </h1>
@@ -81,7 +81,7 @@ export default function Signup() {
         <OAuth />
       </form>
       {error && <p className="text-red-500 mt-2">{error}</p>}
-      <div className="mt-5 text-center flex gap-2">
+      <div className="mt-5 text-center flex gap-2 hover:underline">
         <p>Have an account?</p>
         <Link to="/sign-in" className="text-blue-500">
           Sign In
