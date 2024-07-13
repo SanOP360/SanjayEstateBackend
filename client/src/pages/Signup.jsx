@@ -25,7 +25,7 @@ export default function Signup() {
     setLoading(true);
     setError(null);
     try {
-      const res = await axios.post("/api/auth/signup", formData);
+      const res = await axios.post(`${window.location.origin}/api/auth/signup`, formData);
       if (!res.data.success) {
         setError(res.data.message);
         setLoading(false);

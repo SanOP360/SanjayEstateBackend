@@ -36,7 +36,7 @@ export default function Listing() {
       try {
         setLoading(true);
         const res = await axios.get(
-          `http://localhost:10000/api/listing/getList/${listingId}`
+          `${window.location.origin}/api/listing/getList/${listingId}`
         );
 
         if (res.data.success === false) {

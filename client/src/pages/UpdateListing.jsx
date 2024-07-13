@@ -42,7 +42,7 @@ function UpdateListing() {
       try {
         const listingId = params.listingId;
         const res = await axios.get(
-          `http://localhost:10000/api/listing/getList/${listingId}`
+          `${window.location.origin}/api/listing/getList/${listingId}`
         );
 
         if (res.data.success === false) {
@@ -154,7 +154,7 @@ function UpdateListing() {
       setLoading(true);
       setError(false);
       const res = await axios.post(
-        `/api/listing/update/${params.listingId}`,
+        `${window.location.origin}/api/listing/update/${params.listingId}`,
         formData
       );
 

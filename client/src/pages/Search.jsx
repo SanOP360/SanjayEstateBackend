@@ -106,7 +106,7 @@ function Search() {
     urlParams.set('startIndex',startIndex);
     const searchQuery=urlParams.toString();
     const res = await axios.get(
-      `http://localhost:10000/api/listing/get?${searchQuery}`
+      `${window.location.origin}/api/listing/get?${searchQuery}`
     );
     const data=res.data;
     if(data.length<9){

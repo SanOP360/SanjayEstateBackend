@@ -120,9 +120,12 @@ export default function Profile() {
   const handleLogout = async () => {
     try {
       dispatch(signoutUserStart());
-      const res = await axios.get(`http://localhost:10000/api/auth/signout`, {
-        withCredentials: true,
-      });
+      const res = await axios.get(
+        `${window.location.origin}/api/auth/signout`,
+        {
+          withCredentials: true,
+        }
+      );
 
       if (res.data.success === false) {
         dispatch(signoutUserFailure(res.data.message));
@@ -145,7 +148,7 @@ export default function Profile() {
     try {
       dispatch(updateUserStart());
       const res = await axios.post(
-        `http://localhost:10000/user/update/${currentUser._id}`,
+        `${window.location.origin}/user/update/${currentUser._id}`,
         formData,
         {
           withCredentials: true,
@@ -166,7 +169,9 @@ export default function Profile() {
 
   const handleListingDelete = async (listingId) => {
     try {
-      const res = await axios.post(`/api/listing/delete/${listingId}`);
+      const res = await axios.post(
+        `${window.location.origin}/api/listing/delete/${listingId}`
+      );
 
       if (res.data.success === false) {
         console.log(res.data.message);

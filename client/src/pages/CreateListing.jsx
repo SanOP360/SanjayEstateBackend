@@ -130,7 +130,10 @@ function CreateListing() {
     try {
       setLoading(true);
       setError(false);
-      const res = await axios.post("/api/listing/create", formData);
+      const res = await axios.post(
+        `${window.location.origin}/api/listing/create`,
+        formData
+      );
       
       setLoading(false);
       if(res.data.success===false){

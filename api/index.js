@@ -6,7 +6,7 @@ const userRouter = require("./routes/user.route");
 const authRouter = require("./routes/auth.route");
 const listingRouter = require("./routes/listing.route");
 const cookieParser = require("cookie-parser");
-
+const path = require("path");
 
 dotenv.config();
 
@@ -35,13 +35,13 @@ app.use("/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/listing", listingRouter);
 
-// console.log(__dirname);
 
-// app.use(express.static(path.join(__dirname, "../client/dist")));
+app.use(express.static(path.resolve(__dirname, "../client", "dist")));
 
-// app.get("*", (req, res) => {
-//   res.sendFile(path.join(__dirname, "../client/dist", "index.html"));
-// });
+
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "../client", "dist", "index.html"));
+});
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
@@ -52,7 +52,8 @@ app.use((err, req, res, next) => {
     message,
   });
 });
-const port =  process.env.PORT || 10000
+
+const port = process.env.PORT || 10000;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
