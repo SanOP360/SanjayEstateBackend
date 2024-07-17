@@ -15,7 +15,7 @@ function Contact({ listing }) {
     const fetchLandlord = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:10000/user/${listing.userRef}`,
+          `${window.location.origin}/user/${listing.userRef}`,
           {
             withCredentials: true,
           }
