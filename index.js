@@ -2,9 +2,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
-const userRouter = require("./routes/user.route");
-const authRouter = require("./routes/auth.route");
-const listingRouter = require("./routes/listing.route");
+const userRouter = require("./api/routes/user.route");
+const authRouter = require("./api/routes/auth.route");
+const listingRouter = require("./api/routes/listing.route");
 const cookieParser = require("cookie-parser");
 const path = require("path");
 
@@ -12,9 +12,17 @@ dotenv.config();
 
 const app = express();
 
+const allowedOrigins = ["http://localhost:5173"];
+
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: function (origin, callback) {
+      if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
@@ -34,13 +42,11 @@ mongoose
 app.use("/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/listing", listingRouter);
-
-
-app.use(express.static(path.resolve(__dirname, "../client", "dist")));
-
+console.log(__dirname);
+app.use(express.static(path.resolve(__dirname, "./client", "dist")));
 
 app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "../client", "dist", "index.html"));
+  res.sendFile(path.resolve(__dirname, "./client", "dist", "index.html"));
 });
 
 app.use((err, req, res, next) => {
@@ -52,7 +58,6 @@ app.use((err, req, res, next) => {
     message,
   });
 });
-
 const port = process.env.PORT || 10000;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

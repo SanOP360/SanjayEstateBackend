@@ -25,14 +25,17 @@ export default function Signup() {
     setLoading(true);
     setError(null);
     try {
-      const res = await axios.post(`${window.location.origin}/api/auth/signup`, formData);
+      const res = await axios.post(
+        `${window.location.origin}/api/auth/signup`,
+        formData
+      );
+      console.log(res.data);
       if (!res.data.success) {
         setError(res.data.message);
         setLoading(false);
         return;
       }
       setLoading(false);
-      console.log(res.data);
       navigate("/sign-in");
     } catch (error) {
       setError(
@@ -41,6 +44,7 @@ export default function Signup() {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="p-3 max-w-lg mx-auto min-h-screen">
