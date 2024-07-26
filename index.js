@@ -6,26 +6,12 @@ const userRouter = require("./api/routes/user.route");
 const authRouter = require("./api/routes/auth.route");
 const listingRouter = require("./api/routes/listing.route");
 const cookieParser = require("cookie-parser");
-const path = require("path");
+
 
 dotenv.config();
 
 const app = express();
 
-const allowedOrigins = ["http://localhost:5173"];
-
-// app.use(
-//   cors({
-//     origin: function (origin, callback) {
-//       if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-//         callback(null, true);
-//       } else {
-//         callback(new Error("Not allowed by CORS"));
-//       }
-//     },
-//     credentials: true,
-//   })
-// );
 
 app.use(
   cors({
@@ -33,6 +19,7 @@ app.use(
     credentials: true,
   })
 );
+
 
 app.use(express.json());
 app.use(cookieParser());
@@ -49,13 +36,6 @@ mongoose
 app.use("/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/listing", listingRouter);
-console.log(__dirname);
-app.use(express.static(path.resolve(__dirname, "./client", "dist")));
-
-app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "./client", "dist", "index.html"));
-});
-
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const message = err.message || "Internal server error";

@@ -10,8 +10,8 @@ const test = (req, res) => {
 };
 
 const updateUser = async (req, res, next) => {
-  console.log(req.user.id, "first");
-  console.log(req.params.id, "second");
+  console.log(`User ID from token: ${req.user.id}`);
+  console.log(`User ID from params: ${req.params.id}`);
   if (req.user.id !== req.params.id)
     return next(errorHandler(401, "You can only update your own account!"));
   try {
@@ -41,6 +41,8 @@ const updateUser = async (req, res, next) => {
 };
 
 const deleteUser = async (req, res, next) => {
+  console.log(`User ID from token: ${req.user.id}`);
+  console.log(`User ID from params: ${req.params.id}`);
   if (req.user.id !== req.params.id) {
     return next(errorHandler(401, "You can only delete your own account"));
   }
@@ -54,6 +56,8 @@ const deleteUser = async (req, res, next) => {
 };
 
 const getUserListing = async (req, res, next) => {
+  console.log(`User ID from token: ${req.user.id}`);
+  console.log(`User ID from params: ${req.params.id}`);
   if (req.user.id === req.params.id) {
     try {
       const listings = await Listing.find({ userRef: req.params.id });
@@ -66,18 +70,17 @@ const getUserListing = async (req, res, next) => {
   }
 };
 
-const getUser=async (req,res,next)=>{
-  try{
+const getUser = async (req, res, next) => {
+  try {
     const user = await User.findById(req.params.id);
 
     if (!user) return next(errorHandler(404, "User not found!"));
 
     const { password, pass, ...rest } = user._doc;
     res.status(200).json(rest);
-  }catch(error){
+  } catch (error) {
     next(error);
   }
-  
-}
+};
 
-module.exports = { test, updateUser, deleteUser, getUserListing,getUser };
+module.exports = { test, updateUser, deleteUser, getUserListing, getUser };

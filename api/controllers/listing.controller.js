@@ -4,7 +4,10 @@ const errorHandler = require("../utils/error");
 
 const createListing = async (req, res, next) => {
   try {
-    const listing = await Listing.create(req.body);
+    const listing = await Listing.create({
+      ...req.body,
+      userRef: req.user.id, 
+    });
     return res.status(201).json(listing);
   } catch (error) {
     next(error);
@@ -17,6 +20,8 @@ const deleteListing = async (req, res, next) => {
     if (!listing) {
       return next(errorHandler(404, "Listing not found"));
     }
+    console.log(`User ID: ${req.user.id}`);
+    console.log(`Listing UserRef: ${listing.userRef}`);
     if (req.user.id !== listing.userRef.toString()) {
       return next(errorHandler(403, "You can only delete your own listings!"));
     }
@@ -33,6 +38,8 @@ const updateListing = async (req, res, next) => {
     if (!listing) {
       return next(errorHandler(404, "Listing not found"));
     }
+    console.log(`User ID: ${req.user.id}`);
+    console.log(`Listing UserRef: ${listing.userRef}`);
     if (req.user.id !== listing.userRef.toString()) {
       return next(errorHandler(403, "You can only update your own listings"));
     }
