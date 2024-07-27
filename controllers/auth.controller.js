@@ -9,11 +9,14 @@ const signup = async (req, res, next) => {
     const hashedPassword = bcrypt.hashSync(password, 10);
     const newUser = new User({ username, email, password: hashedPassword });
     await newUser.save();
-    res.status(201).json("User created successfully");
+    res
+      .status(201)
+      .json({ success: true, message: "User created successfully" });
   } catch (error) {
     next(error);
   }
 };
+
 
 const signin = async (req, res, next) => {
   const { email, password } = req.body;
