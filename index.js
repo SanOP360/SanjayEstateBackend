@@ -31,9 +31,13 @@ app.use(express.json());
 
 app.use(cookieParser());
 
-app.listen(10000, () => {
-  console.log("Server is running on port 10000!");
+const PORT = process.env.PORT || 10000;
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}!`);
 });
+
+
 
 app.use("/user", userRouter);
 app.use("/api/auth", authRouter);
