@@ -22,8 +22,8 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:5173", 
-    credentials: true, 
+    origin: "https://sanjay-estate-mern-app.vercel.app",
+    credentials: true,
   })
 );
 
